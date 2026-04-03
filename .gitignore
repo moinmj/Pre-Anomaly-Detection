@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 models/*.pkl
 .env
+
+# Do not commit data files (datasets are too large and should remain local)
+data/
