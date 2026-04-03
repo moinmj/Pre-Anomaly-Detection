@@ -66,8 +66,8 @@ def build_features(data):
 
     # 🔹 Final feature dictionary (MODEL INPUT FORMAT)
     return {
-    # EXISTING
-    "income":profile["income"],
+    # 🔥 CORE FEATURES (your logic)
+    "income": profile["income"],
     "velocity_6h": velocity_6h,
     "velocity_24h": velocity_24h,
     "velocity_4w": velocity_4w,
@@ -80,7 +80,7 @@ def build_features(data):
     "current_address_months_count": 12,
     "prev_address_months_count": 6,
 
-    # 🔥 ADD THESE (VERY IMPORTANT)
+    # 🔥 ADD ALL MISSING FEATURES (CRITICAL)
     "name_email_similarity": 0.5,
     "customer_age": 30,
     "days_since_request": 1,
