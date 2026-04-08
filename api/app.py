@@ -1,3 +1,7 @@
+# from turtle import mode
+
+from unittest import result
+
 from fastapi import FastAPI
 import joblib
 import pandas as pd
@@ -5,10 +9,13 @@ import numpy as np
 import os
 import json
 
+# from xgboost import data
+
 from src.models.risk_scoring import compute_risk_score, explain_risk
 from src.utils.alerts import send_email_alert, log_transaction
 from src.utils.account_monitor import update_account, detect_mule_account
 from src.utils.feature_builder import build_features
+from src.models.genai_engine import analyze_with_llm
 
 import src.utils.alerts
 print("USING ALERTS FILE:", src.utils.alerts.__file__)
@@ -48,20 +55,71 @@ def predict(data: dict):
     df["address_stability"] = df["current_address_months_count"] / (
         df["prev_address_months_count"] + 1
     )
-
+    mode = data.get("mode", "ml")
+    reasons=[]  # default = ml
+    print("MODE:", mode)
     # 🔥 Encoding
     df = pd.get_dummies(df)
 
     # 🔥 Align features
     df = df.reindex(columns=model_features, fill_value=0)
     print("DEBUG FEATURES:", df.iloc[0].to_dict())
-    # 🔥 Prediction
-    print("CALLING LOG FUNCTION NOW")
-    risk_score = compute_risk_score(xgb_model, iso_model, df)[0]
-    risk_score = float(np.nan_to_num(risk_score))
+    def run_ml(df):
+        score = compute_risk_score(xgb_model, iso_model, df)[0]
+        return float(np.nan_to_num(score))
 
-    # 🔥 Explainability
-    reasons = explain_risk(df.iloc[0])
+
+    def run_genai(data):
+
+    
+        print("🚀 CALLING GENAI...")
+        result = analyze_with_llm(data)
+        print("GENAI RESULT:", result)
+        return result
+    print("Entering prediction logic...")
+    # 🔥 Prediction
+    try:
+        if mode == "ml":
+            risk_score = run_ml(df)
+
+        elif mode == "genai":
+            result = run_genai(data)
+
+            if result["success"]:
+                llm_data = result["parsed"]
+                risk_score = float(llm_data["risk_score"])
+                decision = llm_data["decision"]
+                reasons = llm_data["reasons"]
+            else:
+                print("GENAI FAILED -> FALLBACK TO ML")
+                risk_score = run_ml(df)
+        elif mode == "hybrid":
+            result = run_genai(data)
+
+            if result["success"]:
+                print("HYBRID → GENAI USED")
+                llm_output = result["output"]
+
+                #Temporary risk score(can improve later)
+                risk_score = 0.7
+
+                #override reason with LLM explanation
+                reasons=[llm_output]
+            else:
+                print("HYBRID → FALLBACK TO ML")
+                risk_score = run_ml(df)
+
+    except Exception as e:
+        print("ERROR IN GENAI/PIPELINE:", str(e))
+        # fallback safety
+
+        risk_score = run_ml(df)
+
+    
+    # 🔥 Explainability (only if not set by GenAI)
+    if "reasons" not in locals():
+        reasons = explain_risk(df.iloc[0])
+
     if not reasons:
         reasons = ["No strong fraud signals detected"]
 
@@ -73,12 +131,13 @@ def predict(data: dict):
     # 🔥 Decision
     if is_mule:
         decision = "HIGH RISK (MULE ACCOUNT DETECTED)"
-    elif risk_score > 0.6:
-        decision = "HIGH RISK"
-    elif risk_score > 0.4:
-        decision = "MEDIUM RISK"
-    else:
-        decision = "SAFE"
+    elif "decision" not in locals():
+        if risk_score > 0.6:
+            decision = "HIGH RISK"
+        elif risk_score > 0.4:
+            decision = "MEDIUM RISK"
+        else:
+            decision = "SAFE"
 
     # 🔥 Log transaction
     log_transaction(risk_score, df.iloc[0].to_dict())

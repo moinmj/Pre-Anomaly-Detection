@@ -43,13 +43,32 @@ def train_models(X, y):
     print("[INFO] Feature columns saved!")
     print("[INFO] Splitting data...")
 
-    # 🔹 Sampling
-    X_sample = X.sample(n=200000, random_state=42)
+    # 🔹 Sampling (robust to small data and synthetic fallback)
+    sample_size = min(len(X), 200000)
+    if len(X) < 1000:
+        print(f"[WARN] Small dataset detected ({len(X)} rows); using all rows for training.")
+
+    X_sample = X.sample(n=sample_size, random_state=42, replace=(sample_size > len(X)))
     y_sample = y.loc[X_sample.index]
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_sample, y_sample, test_size=0.2, random_state=42, stratify=y_sample
-    )
+    # If stratify fails due to only one class, fall back to no stratify.
+    try:
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_sample,
+            y_sample,
+            test_size=0.2,
+            random_state=42,
+            stratify=y_sample
+        )
+    except ValueError:
+        print("[WARN] Stratified split failed (single-class target); using random split without stratify.")
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_sample,
+            y_sample,
+            test_size=0.2,
+            random_state=42,
+            stratify=None
+        )
 
     #  SMOTE (balance dataset)
     print("[INFO] Applying SMOTE...")
@@ -106,7 +125,10 @@ def train_models(X, y):
     # 🔥 Alert Logic
     print("\n[INFO] Smart Alerts:")
 
-    for i in range(100):
+    n_alerts = min(100, len(X_test), len(risk_scores))
+    if n_alerts == 0:
+        print("[WARN] No test records available for alerting.")
+    for i in range(n_alerts):
         row = X_test.iloc[i]
         risk = risk_scores[i]
 
