@@ -4,9 +4,11 @@ import datetime
 import os
 import json
 
+from src.models.customer_email_generator import generate_customer_email
 
+
+# 🔥 Load ENV
 def _load_env_file(env_path=".env"):
-    """Load key-value pairs from .env into environment variables if missing."""
     if not os.path.exists(env_path):
         return
 
@@ -28,52 +30,109 @@ def _load_env_file(env_path=".env"):
 
 _load_env_file()
 
-# 🔥 Log file path (ONLY ONE)
 LOG_PATH = os.path.join("logs", "fraud_logs.json")
 
 
-# 🚨 EMAIL ALERT
-def send_email_alert(risk_score, data):
-    sender = os.getenv("EMAIL_SENDER", "moinmj7@gmail.com")
-    password = os.getenv("EMAIL_PASSWORD")  # 🔒 use env variable in production
-    receiver = os.getenv("EMAIL_RECEIVER", "moin.jan.mj@gmail.com")
-
-    subject = "🚨 Fraud Alert Detected"
-    body = f"""
-    High Risk Transaction Detected!
-
-    Risk Score: {risk_score}
-
-    Transaction Data:
-    {data}
-    """
-
-    msg = MIMEText(body)
-    msg["Subject"] = subject
-    msg["From"] = sender
-    msg["To"] = receiver
+# 🔥 COMMON MAIL SENDER
+def _send_email(subject, body, receiver=None):
+    sender = os.getenv("EMAIL_SENDER", "your_email@gmail.com")
+    password = os.getenv("EMAIL_PASSWORD")
+    receiver = receiver or os.getenv("EMAIL_RECEIVER")
 
     if not password:
-        print("[WARN] EMAIL_PASSWORD is not set. Skipping email alert.")
-        return
-
-    if not sender or not receiver:
-        print("[WARN] EMAIL_SENDER or EMAIL_RECEIVER is not set. Skipping email alert.")
+        print("[WARN] EMAIL_PASSWORD missing")
         return
 
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=20)
+        msg = MIMEText(body)
+        msg["Subject"] = subject
+        msg["From"] = sender
+        msg["To"] = receiver
+
+        server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(sender, password)
         server.send_message(msg)
         server.quit()
-        print("[ALERT] Email sent successfully")
-    except smtplib.SMTPAuthenticationError as e:
-        print("[ERROR] Email authentication failed. Check EMAIL_SENDER and EMAIL_PASSWORD.", str(e))
+
+        print(f"📧 Email sent → {receiver}")
+
     except Exception as e:
         print("[ERROR] Email failed:", e)
 
 
+# 🚨 1. MANAGER ALERT EMAIL
+def send_manager_alert(risk_score, decision, reasons, account_id, data):
+    approval_link = f"http://127.0.0.1:8000/approve?account_id={account_id}"
+    disapprove_link = f"http://127.0.0.1:8000/disapprove?account_id={account_id}"
+
+    body = f"""
+🚨 FRAUD ALERT 🚨
+
+Risk Level: {decision}
+Risk Score: {round(risk_score, 2)}
+
+Reasons:
+{chr(10).join(["• " + r for r in reasons])}
+
+-----------------------------
+ACTION REQUIRED
+-----------------------------
+
+✅ Approve:
+{approval_link}
+
+❌ Disapprove:
+{disapprove_link}
+
+-----------------------------
+Transaction Data:
+{data}
+"""
+
+    _send_email("🚨 Fraud Alert - Action Required", body)
+
+
+# 📧 2. CUSTOMER EMAIL DRAFT (TO MANAGER)
+def send_customer_draft(customer_email_text):
+    body = f"""
+📧 CUSTOMER EMAIL PREVIEW
+
+This email will be sent to the customer after approval:
+
+---------------------------------------
+{customer_email_text}
+---------------------------------------
+"""
+
+    _send_email("📧 Customer Email Draft", body)
+
+
+# 📧 3. FINAL CUSTOMER EMAIL
+def send_customer_email(customer_email_text, customer_email_id=None):
+    # ⚠️ Replace with real customer email logic later
+    receiver = customer_email_id or "customer@example.com"
+
+    _send_email("Important Account Notice", customer_email_text, receiver)
+
+
+# 🔥 SMART ALERT TEXT (OPTIONAL)
+def generate_smart_alert(risk_score, decision, reasons):
+    alert = f"""
+🚨 FRAUD ALERT 🚨
+
+Risk Level: {decision}
+Risk Score: {round(risk_score, 2)}
+
+Reasons:
+"""
+    for r in reasons:
+        alert += f"• {r}\n"
+
+    return alert
+
+
+# 📝 LOG TRANSACTION
 def log_transaction(risk_score, data):
     print("🔥 JSON LOGGER ACTIVE")
 
@@ -83,3 +142,8 @@ def log_transaction(risk_score, data):
         "account_id": data.get("account_id", "unknown"),
         "data": data
     }
+
+    os.makedirs("logs", exist_ok=True)
+
+    with open(LOG_PATH, "a") as f:
+        f.write(json.dumps(log_entry) + "\n")
