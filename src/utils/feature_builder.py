@@ -24,7 +24,7 @@ device_fraud_db = {
 }
 
 # 🔥 Transaction history (for velocity)
-account_transactions = defaultdict(list)
+account_transactions = defaultdict(list)               
 
 
 def build_features(data):

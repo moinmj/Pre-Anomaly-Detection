@@ -3,13 +3,12 @@ import os
 import json
 import re
 
-# 🔐 Initialize Groq client safely
-api_key = os.getenv("GROQ_API_KEY")
 
-if not api_key:
-    raise ValueError("GROQ_API_KEY is not set")
-
-client = Groq(api_key=api_key)
+def get_client():
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        raise ValueError("GROQ_API_KEY not set")
+    return Groq(api_key=api_key)
 
 
 def analyze_with_llm(data):
@@ -33,7 +32,9 @@ Return ONLY valid JSON (no explanation, no markdown):
 """
 
     try:
-        # 🔥 Call Groq API
+        # 🔥 Initialize client ONLY when needed
+        client = get_client()
+
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[
@@ -41,14 +42,12 @@ Return ONLY valid JSON (no explanation, no markdown):
             ]
         )
 
-        # 🔥 Extract output
         output = response.choices[0].message.content
         print("RAW LLM OUTPUT:", output)
 
-        # 🔥 Clean unwanted markdown (```json blocks)
+        # 🔥 Clean markdown if present
         cleaned = re.sub(r"```json|```", "", output).strip()
 
-        # 🔥 Parse JSON safely
         parsed = json.loads(cleaned)
 
         print("PARSED SUCCESS:", parsed)

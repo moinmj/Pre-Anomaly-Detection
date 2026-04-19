@@ -2,7 +2,7 @@ import requests
 import time
 import random
 
-API_URL = "http://127.0.0.1:8000/predict"
+API_URL = "http://api:8000/predict"
 
 while True:
     data = {

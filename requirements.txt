@@ -1,8 +1,51 @@
-pandas
-numpy
-scikit-learn
-xgboost
-matplotlib
-seaborn
-fastapi
-uvicorn
+# -------------------------------
+# 🚀 Backend (FastAPI)
+# -------------------------------
+fastapi==0.115.0
+uvicorn==0.30.6
+
+# -------------------------------
+# 🧠 Machine Learning
+# -------------------------------
+scikit-learn==1.5.1
+xgboost==2.1.1
+numpy==1.26.4
+pandas==2.2.2
+imbalanced-learn==0.12.3
+
+# -------------------------------
+# 🤖 GenAI (Groq / LLM)
+# -------------------------------
+groq==0.9.0
+httpx==0.27.0
+
+# -------------------------------
+# 📊 Dashboard
+# -------------------------------
+streamlit==1.37.0
+plotly==5.23.0
+
+# -------------------------------
+# 📡 API Requests (Simulator + Dashboard)
+# -------------------------------
+requests==2.32.3
+
+# -------------------------------
+# 📧 Email (built-in but keep safe)
+# -------------------------------
+# smtplib → built-in (no install needed)
+
+# -------------------------------
+# 📁 Utilities
+# -------------------------------
+python-dotenv==1.0.1
+
+# -------------------------------
+# 📊 Data Visualization (optional but safe)
+# -------------------------------
+matplotlib==3.9.2
+
+# -------------------------------
+# ⚡ Async Support
+# -------------------------------
+anyio==4.4.0
