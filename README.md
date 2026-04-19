@@ -1,28 +1,36 @@
-﻿🚨 Pre-Anomaly Fraud Detection System
+﻿# 🚨 Pre-Anomaly Fraud Detection System
 
-AI-Powered Hybrid Fraud Detection (ML + GenAI + Human-in-the-loop)
+> AI-Powered Hybrid Fraud Detection (ML + GenAI + Human-in-the-loop)
 
-📌 Overview
+---
 
-Traditional fraud detection systems detect fraud after it happens.
-This project focuses on Pre-Anomaly Detection — identifying suspicious behavior before fraud occurs.
+## 📌 Overview
 
-It combines:
+Traditional fraud detection systems detect fraud **after it happens**.  
+This project focuses on **Pre-Anomaly Detection** — identifying suspicious behavior **before fraud occurs**.
 
-🤖 Machine Learning (ML) → Pattern-based detection
-🧠 Generative AI (GenAI) → Reasoning + explainability
-👨‍💼 Human-in-the-loop → Manager approval workflow
-🚀 Key Features
-🔹 Hybrid Fraud Detection Engine
-ML + GenAI combined scoring
-Conflict detection → triggers investigation mode
-Adaptive decision system
-🔹 Explainable AI (XAI)
-Human-readable fraud reasons
-Auditor-friendly outputs
+### 🔹 Combines:
+- 🤖 Machine Learning (ML) → Pattern-based detection  
+- 🧠 Generative AI (GenAI) → Reasoning + explainability  
+- 👨‍💼 Human-in-the-loop → Manager approval workflow  
 
-Example:
+---
 
+## 🚀 Key Features
+
+### 🔹 Hybrid Fraud Detection Engine
+- ML + GenAI combined scoring  
+- Conflict detection → triggers investigation mode  
+- Adaptive decision system  
+
+---
+
+### 🔹 Explainable AI (XAI)
+
+Human-readable fraud reasons.
+
+#### Example:
+```json
 {
   "risk_score": 0.7,
   "decision": "HIGH RISK",
@@ -32,18 +40,23 @@ Example:
   ]
 }
 🔹 Human-in-the-Loop Workflow
+
 Manager receives:
+
 📧 Fraud alert email
 📧 AI-generated customer email draft
-Manager can:
+
+Manager actions:
+
 ✅ Approve → Customer notified
 ❌ Reject → No action
+
 Auto-learning:
+
 After multiple approvals → system auto-executes actions
 🔹 Mule Account Detection
-Detects coordinated fraud behavior:
-High velocity transactions
-Foreign activity patterns
+Detects coordinated fraud behavior
+High velocity + foreign patterns
 Automatically flags high-risk accounts
 🔹 Smart Alert System
 Context-aware alerts
@@ -61,23 +74,8 @@ Generates real-time transactions
 Simulates fraud scenarios
 Tests system behavior
 🏗️ System Architecture
-          ┌──────────────┐
-          │ Simulator    │
-          └──────┬───────┘
-                 ↓
-          ┌──────────────┐
-          │ FastAPI API  │
-          │ ML + GenAI   │
-          └──────┬───────┘
-                 ↓
-      ┌──────────────┐
-      │ Dashboard    │
-      │ (Streamlit)  │
-      └──────────────┘
-                 ↓
-          ┌──────────────┐
-          │ Email System │
-          └──────────────┘
+Simulator → FastAPI API → Dashboard → Email System
+             (ML + GenAI)
 ⚙️ Tech Stack
 🔹 Backend
 FastAPI
@@ -118,13 +116,13 @@ Pre-Anomaly-Detection/
 ├── Dockerfile
 ├── requirements.txt
 └── README.md
-🐳 Running with Docker (Recommended)
-🔹 1. Add .env
+🐳 Running with Docker
+🔹 1. Create .env
 GROQ_API_KEY=your_key
 EMAIL_PASSWORD=your_password
 EMAIL_SENDER=your_email
 EMAIL_RECEIVER=manager_email
-🔹 2. Run system
+🔹 2. Run
 docker-compose up --build
 🔹 3. Access
 API → http://localhost:8000/docs
@@ -133,8 +131,7 @@ Dashboard → http://localhost:8501
 Transaction generated (Simulator)
 Sent to API
 ML + GenAI analyze
-Decision Engine:
-SAFE / MEDIUM / HIGH RISK
+Decision Engine assigns risk
 If HIGH RISK:
 Email sent to Manager
 Approval required
@@ -145,24 +142,18 @@ Account action taken
 Problem	ML Limitation	GenAI Advantage
 Zero-day fraud	Needs training data	Detects unseen patterns
 Explainability	Black-box	Human-readable
-Unstructured data	Cannot process	Can analyze text/logs
+Unstructured data	Cannot process	Can analyze text
 Investigation	Manual	AI-assisted
-Fraud rings	Hard to detect	Relationship reasoning
 🔥 Future Enhancements
-Kafka real-time streaming
-PostgreSQL / MongoDB integration
+Kafka streaming
+Database integration
 Role-based dashboard
-Risk feedback learning loop
-Cloud deployment (AWS / GCP)
-📸 Demo
-
-(Add screenshots here: Dashboard, Email, API response)
-
+Cloud deployment
 👨‍💻 Author
 
 Your Name
 AI/ML Engineer
 
-⭐ If you like this project
+⭐ Support
 
-Give it a ⭐ on GitHub!
+If you like this project, give it a ⭐ on GitHub!
