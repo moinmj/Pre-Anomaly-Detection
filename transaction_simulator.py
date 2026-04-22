@@ -4,6 +4,18 @@ import random
 
 API_URL = "http://api:8000/predict"
 
+def send_transaction(payload):
+    while True:
+        try:
+            response = requests.post(API_URL, json=payload, timeout=30)
+            print("Sent:", payload)
+            print("Response:", response.json())
+            break
+        except Exception as e:
+            print("⏳ waiting for API response (LLM maybe slow)...", e)
+            time.sleep(5)
+
+
 while True:
     data = {
         "account_id": f"user{random.randint(1,5)}",
@@ -14,11 +26,6 @@ while True:
         "foreign_request": random.choice([0, 1])
     }
 
-    try:
-        res = requests.post(API_URL, json=data)
-        print("Sent:", data)
-        print("Response:", res.json())
-    except Exception as e:
-        print("Error:", e)
+    send_transaction(data)   # ✅ IMPORTANT FIX
 
     time.sleep(3)

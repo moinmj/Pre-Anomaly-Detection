@@ -3,7 +3,7 @@ from streamlit_autorefresh import st_autorefresh
 import requests
 import pandas as pd
 import plotly.express as px
-
+import time
 
 API_URL = "http://api:8000"
 
