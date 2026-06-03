@@ -42,19 +42,19 @@ Human-readable fraud reasons.
 ```
 
 
-🔹 Human-in-the-Loop Workflow
+#### 🔹 Human-in-the-Loop Workflow
 
-Manager receives:
+## Manager receives:
 
 📧 Fraud alert email
 📧 AI-generated customer email draft
 
-Manager actions:
+## Manager actions:
 
 ✅ Approve → Customer notified
 ❌ Reject → No action
 
-Auto-learning:
+## Auto-learning:
 
 After multiple approvals → system auto-executes actions
 🔹 Mule Account Detection
@@ -76,10 +76,12 @@ Account-level tracking
 Generates real-time transactions
 Simulates fraud scenarios
 Tests system behavior
-🏗️ System Architecture
+#### 🏗️ System Architecture
+```text
 Simulator → FastAPI API → Dashboard → Email System
              (ML + GenAI)
-⚙️ Tech Stack
+```
+#### ⚙️ Tech Stack
 🔹 Backend
 FastAPI
 Python
@@ -94,7 +96,7 @@ Plotly
 🔹 DevOps
 Docker
 Docker Compose
-📂 Project Structure
+#### 📂 Project Structure
 ```text
 Pre-Anomaly-Detection/
 │
@@ -121,7 +123,8 @@ Pre-Anomaly-Detection/
 ├── requirements.txt
 └── README.md
 ```
-🐳 Running with Docker
+#### 🐳 Running with Docker
+```text
 🔹 1. Create .env
 GROQ_API_KEY=your_key
 EMAIL_PASSWORD=your_password
@@ -132,7 +135,9 @@ docker-compose up --build
 🔹 3. Access
 API → http://localhost:8000/docs
 Dashboard → http://localhost:8501
-🔁 Workflow
+```
+#### 🔁 Workflow
+```text
 Transaction generated (Simulator)
 Sent to API
 ML + GenAI analyze
@@ -143,22 +148,23 @@ Approval required
 On approval:
 Customer notified
 Account action taken
-🧠 Why Hybrid (ML + GenAI)?
+```
+#### 🧠 Why Hybrid (ML + GenAI)?
+```text
 Problem	ML Limitation	GenAI Advantage
 Zero-day fraud	Needs training data	Detects unseen patterns
 Explainability	Black-box	Human-readable
 Unstructured data	Cannot process	Can analyze text
 Investigation	Manual	AI-assisted
-🔥 Future Enhancements
+```
+#### 🔥 Future Enhancements
+```text
 Kafka streaming
 Database integration
 Role-based dashboard
 Cloud deployment
-👨‍💻 Author
+```
+#### 👨‍💻 Author
 
-Moin Jan Rashid
-AI/ML Engineer
-
-⭐ Support
-
-If you like this project, give it a ⭐ on GitHub!
+***Moin Jan Rashid***
+***AI/ML Engineer***
