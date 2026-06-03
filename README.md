@@ -95,6 +95,7 @@ Plotly
 Docker
 Docker Compose
 📂 Project Structure
+```text
 Pre-Anomaly-Detection/
 │
 ├── api/
@@ -119,6 +120,7 @@ Pre-Anomaly-Detection/
 ├── Dockerfile
 ├── requirements.txt
 └── README.md
+```
 🐳 Running with Docker
 🔹 1. Create .env
 GROQ_API_KEY=your_key
