@@ -56,46 +56,46 @@ Human-readable fraud reasons.
 
 ## Auto-learning:
 
-After multiple approvals → system auto-executes actions
-🔹 Mule Account Detection
-Detects coordinated fraud behavior
-High velocity + foreign patterns
-Automatically flags high-risk accounts
-🔹 Smart Alert System
-Context-aware alerts
-Suggested actions:
-Freeze account
-Request verification
-Monitor activity
-🔹 Real-Time Dashboard (Streamlit)
-Live fraud monitoring
-Risk score trends
-Decision distribution
-Account-level tracking
-🔹 Transaction Simulator
-Generates real-time transactions
-Simulates fraud scenarios
-Tests system behavior
+After multiple approvals → system auto-executes actions  
+🔹 Mule Account Detection  
+Detects coordinated fraud behavior  
+High velocity + foreign patterns  
+Automatically flags high-risk accounts  
+🔹 Smart Alert System  
+Context-aware alerts  
+Suggested actions:  
+Freeze account  
+Request verification  
+Monitor activity  
+🔹 Real-Time Dashboard (Streamlit)  
+Live fraud monitoring  
+Risk score trends  
+Decision distribution  
+Account-level tracking  
+🔹 Transaction Simulator  
+Generates real-time transactions  
+Simulates fraud scenarios  
+Tests system behavior  
 #### 🏗️ System Architecture
 ```text
 Simulator → FastAPI API → Dashboard → Email System
              (ML + GenAI)
 ```
 #### ⚙️ Tech Stack
-🔹 Backend
-FastAPI
-Python
-🔹 ML Models
-XGBoost
-Isolation Forest
-🔹 GenAI
-Groq API (LLaMA 3)
-🔹 Frontend
-Streamlit
-Plotly
-🔹 DevOps
-Docker
-Docker Compose
+🔹 Backend  
+FastAPI  
+Python  
+🔹 ML Models  
+XGBoost  
+Isolation Forest  
+🔹 GenAI  
+Groq API (LLaMA 3)  
+🔹 Frontend  
+Streamlit  
+Plotly  
+🔹 DevOps  
+Docker  
+Docker Compose  
 #### 📂 Project Structure
 ```text
 Pre-Anomaly-Detection/
@@ -166,5 +166,5 @@ Cloud deployment
 ```
 #### 👨‍💻 Author
 
-***Moin Jan Rashid***
+***Moin Jan Rashid***  
 ***AI/ML Engineer***
