@@ -39,6 +39,7 @@ Human-readable fraud reasons.
     "Foreign request detected"
   ]
 }
+```
 
 
 🔹 Human-in-the-Loop Workflow
@@ -153,7 +154,7 @@ Role-based dashboard
 Cloud deployment
 👨‍💻 Author
 
-Your Name
+Moin Jan Rashid
 AI/ML Engineer
 
 ⭐ Support
